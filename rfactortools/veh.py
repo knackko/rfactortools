@@ -65,19 +65,21 @@ def find_file_backwards(directory, gen):
 class Veh:
 
     def __init__(self):
-        self.filename = None
-        self.graphics_file = None
-        self.spinner_file = None
-        self.gen_string = None
-        self.sounds = None
-        self.cameras = None
-        self.upgrades = None
-        self.hd_vehicle = None
-        self.eye_point = None
-        self.driver = None
-        self.team = None
-        self.description = None
-        self.category = None
+        self.filename = "NA"
+        self.graphics_file = "NA"
+        self.spinner_file = "NA"
+        self.genstring = "NA"
+        self.sounds = "NA"
+        self.cameras = "NA"
+        self.upgrades = "NA"
+        self.hd_vehicle = "NA"
+        self.eye_point = "NA"
+        self.driver = "NA"
+        self.team = "NA"
+        self.description = "NA"
+        self.category = "NA"
+        self.engine = "NA"
+        self.number = "NA"
         self.classes = []
 
 
@@ -117,6 +119,18 @@ def parse_vehfile(filename):
                     veh.driver = unquote(value)
                 elif key.lower() == "team":
                     veh.team = unquote(value)
+                elif key.lower() == "description":
+                    veh.description	= unquote(value)
+                elif key.lower() == "hdvehicle":
+                    veh.hd_vehicle	= unquote(value).strip()
+                elif key.lower() == "upgrades":
+                    veh.upgrades	= unquote(value)
+                elif key.lower() == "genstring":
+                    veh.genstring	= unquote(value)	
+                elif key.lower() == "engine":
+                    veh.engine	= unquote(value)
+                elif key.lower() == "number":
+                    veh.number	= unquote(value)						
                 else:
                     pass
 
@@ -231,24 +245,30 @@ def _print_tree_rec(tree, indent, fout):
         fout.write("%s%s[%s]\n" % (indent, sym, k))
         for e in v.content:
             #fout.write("%s%s%-30s %-30s %s\n" % (indent, symc, e.driver, e.team, e.filename))
-            fout.write("%s%s%-30s %-30s\n" % (indent, symc, e.driver, e.team))
+            fout.write("%s%s%-30s %-30s\n" % (indent, symc, e.driver, e.hd_vehicle))
         _print_tree_rec(v, indent + "  ", fout)
 
 
 def print_veh_tree(vehs, fout):
     tree = Tree()
+#    tree_hdv = Tree()
     for veh in vehs:
         subtree = tree
         for cat in veh.category:
             subtree = subtree[cat]
         subtree.content.append(veh)
-
+#        subtree_hdv = tree_hdv
+#        for hdv in veh.hd_vehicle:
+#            subtree_hdv = subtree_hdv[hdv]
+#        subtree_hdv.content.append(hdv)
     _print_tree_rec(tree, "", fout)
+ #   _print_tree_rec(tree_hdv, "", fout)
 
 
 def print_veh_info(vehs, fout):
     for veh in vehs:
         fout.write("    file: %s\n" % veh.filename)
+        fout.write("  driver: %s\n" % veh.driver)
         fout.write(" classes: %s\n" % veh.classes)
         fout.write("graphics: %s\n" % veh.graphics_file)
         fout.write("category: %s\n" % veh.category)
